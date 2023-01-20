@@ -280,12 +280,20 @@ public class Chessboard : MonoBehaviour
 
             if (othercp.team == 0)
             {
+                if (othercp.type == ChessPieceType.King)
+                {
+                    CheckMate(1);
+                }
                 deadWhites.Add(othercp);
                 othercp.SetScale(Vector3.one * deadsSize);
                 othercp.SetPosition(new Vector3(8 * tileSize, yOffset, -1 * tileSize) - bounds + new Vector3(tileSize / 2, deadsHight, tileSize / 2) + (Vector3.forward * deadsSpacing) * deadWhites.Count);
             }
             else
             {
+                if (othercp.type == ChessPieceType.King)
+                {
+                    CheckMate(0);
+                }
                 deadBlacks.Add(othercp);
                 othercp.SetScale(Vector3.one * deadsSize);
                 othercp.SetPosition(new Vector3(-1 * tileSize, yOffset, 8 * tileSize) - bounds + new Vector3(tileSize / 2, deadsHight, tileSize / 2) + (Vector3.back * deadsSpacing) * deadBlacks.Count);
@@ -301,6 +309,24 @@ public class Chessboard : MonoBehaviour
 
 
         return true;
+    }
+
+    private void CheckMate(int team)
+    {
+        DisplayVictory();
+    }
+
+    private void DisplayVictory()
+    {
+         
+    }
+    private void OnResetButton()
+    {
+         
+    }
+    private void OnExitButton()
+    {
+         
     }
 
     private void HighlightTiles()
