@@ -15,6 +15,7 @@ public class Chessboard : MonoBehaviour
     [SerializeField] private float deadsSize = 0.3f;
     [SerializeField] private float deadsSpacing = 0.3f;
     [SerializeField] private float deadsHight = 2.5f;
+    [SerializeField] private GameObject VictoryScreen;
 
     private ChessPiece[,] chessPieces;
     private ChessPiece currentlyDragging;
@@ -28,6 +29,7 @@ public class Chessboard : MonoBehaviour
     private Vector2Int currentHover;
     private Vector3 bounds;
     private bool isWhiteTurn;
+
     private void Awake()
     {
         isWhiteTurn = true;
@@ -313,20 +315,52 @@ public class Chessboard : MonoBehaviour
 
     private void CheckMate(int team)
     {
-        DisplayVictory();
+        DisplayVictory(team);
     }
 
-    private void DisplayVictory()
+    private void DisplayVictory(int winningTeam)
     {
-         
+        VictoryScreen.SetActive(true);
+        VictoryScreen.transform.GetChild(winningTeam).gameObject.SetActive(true);
     }
-    private void OnResetButton()
+    public void OnResetButton()
     {
-         
+        VictoryScreen.SetActive(false);
+        VictoryScreen.transform.GetChild(0).gameObject.SetActive(false);
+        VictoryScreen.transform.GetChild(1).gameObject.SetActive(false);
+
+        for (int i = 0; i < TILE_COUNT_X; i++)
+        {
+            for (int j = 0; j < TILE_COUNT_Y; j++)
+            {
+                if(chessPieces[i,j] != null){
+                    Destroy(chessPieces[i,j].gameObject);
+                }
+                chessPieces[i,j] = null;
+            }
+        }
+        for (int i = 0; i < deadBlacks.Count; i++)
+        {
+            Destroy(deadBlacks[i].gameObject);
+        }
+        for (int i = 0; i < deadWhites.Count; i++)
+        {
+            Destroy(deadWhites[i].gameObject);
+        }
+
+        deadBlacks.Clear();
+        deadWhites.Clear();
+
+        currentlyDragging = null;
+        availableMoves = new List<Vector2Int>(); 
+
+        SpawnAllPieces();
+        PositionAllPieces();
+        isWhiteTurn = true;
     }
-    private void OnExitButton()
+    public void OnExitButton()
     {
-         
+         Application.Quit();
     }
 
     private void HighlightTiles()
